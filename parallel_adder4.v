@@ -1,10 +1,10 @@
+`timescale 1ns / 10ps
 /* Copyright (c) Gyorgy Wyatt Muntean 2017
  *
  * This module sums a 4 element input vector using
  * pipelining. Each element is 32-bits in width.
  *
  */
-`timescale 1ns / 10ps
 module parallel_adder4( Clock, Reset, Enable, vector, finished, sum);
     // Clock and Reset Signals
     input Clock;

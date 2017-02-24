@@ -1,3 +1,5 @@
+`timescale 1ns / 10ps
+`include "clogb2.v"
 /* Copyright (c) Gyorgy Wyatt Muntean 2017
  *
  * This module computes the dot-product between input vecotrs A and B.
@@ -6,9 +8,6 @@
  * of B is B_DATA_WIDTH.
  * The output, 'Product', is a scalar of bit-width: A_DATA_WIDTH + B_DATA_WIDTH + ceiling(log_2(DIM))
  */
- 
-`timescale 1ns / 10ps
-`include "clogb2.v"
 module dot_product #( parameter DIM=8,
                       parameter A_DATA_WIDTH=32,
                       parameter B_DATA_WIDTH=32 )

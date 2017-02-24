@@ -19,9 +19,9 @@ module mult_and_sum #( parameter A_DATA_WIDTH=32,
     assign res = (a * b) + sum;               
  endmodule
  
- /*
-  * This module serves as a testbench for the mult_and_sum module.
-  */
+/*
+* This module serves as a testbench for the mult_and_sum module.
+*/
 module mult_and_sum_testbench();
     reg [7:0] a;
     reg [7:0] b;

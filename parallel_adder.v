@@ -1,3 +1,5 @@
+`timescale 1ns / 10ps
+`include "clogb2.v"
 /* Copyright (c) Gyorgy Wyatt Muntean 2017
  *
  * This module sums all the elements of an input vector using
@@ -8,8 +10,6 @@
  *
  * NOTE: CIRITICAL ASSUMPTION: For now I am assuming the input length, DIM, is a power of 2.
  */
-`timescale 1ns / 10ps
-`include "clogb2.v"
 module parallel_adder #( parameter DIM = 8,
                           parameter W = 64 )
                        ( Clock, vector, finished, sum);

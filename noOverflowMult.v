@@ -6,9 +6,10 @@
 // Project Name: Matrix Multiply
 // Target Devices: ZYNQ702
 // Description: 
-//      This module multiplies two terms, a and b, and stores the result in a wire large enough
-// to handle any overflow from the multiplication operation. Thus the width of the wire holding the 
-// product is of width a_width + b_width. The width of inputs a and b do not have to be equivalent, and 
+//      This module multiplies two terms, a and b, and stores the result in a wire 
+// large enough to handle any overflow from the multiplication operation. 
+// Thus the width of the wire holding the product is of width a_width + b_width. 
+// The width of inputs a and b do not have to be equivalent, and 
 // each input width is parameterizable.
 //
 //////////////////////////////////////////////////////////////////////////////////
