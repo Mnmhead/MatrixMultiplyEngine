@@ -4,8 +4,11 @@
  * This module sums a 4 element input vector using
  * pipelining. Each element is 32-bits in width.
  *
+ * NOTE: This module is a simplified version of parallelAdder. I created this
+ * module so I could figure out how to implement a parallel adder. It was
+ * best for me start with something easier.
  */
-module parallel_adder4( Clock, Reset, Enable, vector, finished, sum);
+module parallelAdder4( Clock, Reset, Enable, vector, finished, sum);
     // Clock and Reset Signals
     input Clock;
     input Reset;
@@ -100,46 +103,4 @@ module parallel_adder4( Clock, Reset, Enable, vector, finished, sum);
             ts <= ns;
         end
     end          
-endmodule
-
-/*
- * This module serves as a testbench for the parallel_adder module.
- */
-module parallel_adder4_testbench();
-
-    reg Clock;
-    reg Reset;
-    reg [(32*4)-1:0] vector;
-    wire [33:0] sum;
-    wire finished;
-    
-    // Set up the clock.
-    parameter CLOCK_PERIOD=100;
-    initial Clock=1;
-    always begin
-        #(CLOCK_PERIOD/2);
-        Clock = ~Clock;
-    end
-    
-    // unit under test
-    parallel_adder4 uut(.Clock(Clock), .Reset(Reset), .vector(vector), .finished(finished), .sum(sum));    
-        
-    // Set up the inputs to the design. Each line is a clock cycle.
-    initial begin
-        // Initialize inputs
-        vector = 0;
-        #100;
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-     vector = 128'b00000000000000000000000000011000000000000000000000000000000010000000000000000000000000000000100000000000000000000000000000001000; @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                         
-        #300;
-        $stop; // End the simulation.
-    end
 endmodule

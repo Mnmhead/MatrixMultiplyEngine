@@ -9,8 +9,10 @@
  * The width of sum will be W + DIM for now.....later it will be W + ceiling( log_2( DIM ) ).
  *
  * NOTE: CIRITICAL ASSUMPTION: For now I am assuming the input length, DIM, is a power of 2.
+ * THIS MODULE IS INCOMPLETE AND DOES NOT WORK.
  */
-module parallel_adder #( parameter DIM = 8,
+
+module parallelAdder #( parameter DIM = 8,
                           parameter W = 64 )
                        ( Clock, vector, finished, sum);
     
@@ -87,47 +89,4 @@ module parallel_adder #( parameter DIM = 8,
     always @(posedge Clock) begin
         ts <= ns;
     end          
-endmodule
-
-/*
- * This module serves as a testbench for the parallel_adder module.
- */
-module parallel_adder_testbench();
-    localparam DIM = 2;
-    localparam WIDTH = 16;
-    localparam EXTRA_ADD_WIDTH = `CLOG2(DIM);
-    localparam RES_WIDTH = WIDTH + EXTRA_ADD_WIDTH;
-
-    reg Clock;
-    reg [(DIM*WIDTH)-1:0] vector;
-    wire [RES_WIDTH-1:0] sum;
-    wire finished;
-    
-    // Set up the clock.
-    parameter CLOCK_PERIOD=10;
-    initial Clock=1;
-    always begin
-        #(CLOCK_PERIOD/2);
-        Clock = ~Clock;
-    end
-    
-    // unit under test
-    parallel_adder #(DIM, WIDTH) uut(.Clock(Clock), .vector(vector), .finished(finished), .sum(sum));    
-        
-    // Set up the inputs to the design. Each line is a clock cycle.
-    initial begin
-        #100;
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-     vector = 32'b00000000000010000000000000001000;                                                   @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                                                        @(posedge Clock);
-                         
-        #100;
-        $stop; // End the simulation.
-    end
 endmodule
