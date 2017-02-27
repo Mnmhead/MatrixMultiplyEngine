@@ -1,3 +1,5 @@
+// Copyright (c) Gyorgy Wyatt Muntean 2017
+// This module defines a macro for the function Ceiling(log_2(x))
 `define CLOG2(x) \
     (x <= 2) ? 1 : \
     (x <= 4) ? 2 : \

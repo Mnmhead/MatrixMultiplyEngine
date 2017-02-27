@@ -48,12 +48,12 @@ module noOverflowMult_testbench();
         for( i = 0; i < max_a; i = i + 1 ) begin
             a = i;   
             for( j = 0; j < max_b; j = j + 1 ) begin
-                b= j; #(3*CLOCK_PERIOD); // wait 3 clock periods (for readablility in simulation)
+                b= j; #(2*CLOCK_PERIOD);  // wait 2 clock periods (for readablility in simulation)
     
-                $display( "%d", product );
-    
+                // Abort the simulation and display an error if an 
+                // unexpected value is produced.
                 if( product != (i*j)) begin
-                    $display( "Error: Incorrect dot-product result" );
+                    $display( "Error: incorrect product" );
                     $finish;
                 end
             end
