@@ -41,6 +41,14 @@ module vectorSum
     // I'm sort of confused...I maximizing the throughput of the vector sum module by allowing antier vector sum operation
     // to complete every cycle. Then this means that 
     reg [(W_u + `CLOG2(DIM))-1:0] i_sums;
+
+    // Here is my idea....
+    // I will create a parameterized module called nRegisters. It will take in a integer n and stamp out n registers.
+    // It will take a sinlge input and pass the input from one register to the next untill finally the output is assigned
+    // to the input n posedges later.
+
+
+
     
     // Next state logic
     always @(posedge Clock) begin
