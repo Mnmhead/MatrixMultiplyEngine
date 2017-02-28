@@ -50,7 +50,7 @@ module dotProduct
         for( i = 0; i < DIM; i = i + 1 ) begin
             // indexed part-select...
             // identifier[base : width]
-            s = s + mult[(MULT_WIDTH * i) +: MULT_WIDTH];
+            s = s + mult[(A_DATA_WIDTH+B_DATA_WIDTH) * i +: (A_DATA_WIDTH+B_DATA_WIDTH)];
         end  
     end
     

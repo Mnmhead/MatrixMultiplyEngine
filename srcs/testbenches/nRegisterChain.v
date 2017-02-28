@@ -27,7 +27,7 @@ module nRegisterChain_testbench();
 	end 
 
 	// unit under test
-	nRegisterChain_testbench #(N,W) ( .Clock(Clock), .in(in), .out(out) );
+	nRegisterChain #(N,W) ( .Clock(Clock), .in(in), .out(out) );
 
 	// Start Simulation.	
 	initial begin
@@ -37,17 +37,17 @@ module nRegisterChain_testbench();
 		#100;
 
 		in = 16'b0100101001010101;									@(posedge Clock);
-	   in = 16'b0101000101011111;									@(posedge Clock);
+	    in = 16'b0101000101011111;									@(posedge Clock);
 		in = 16'b1111111101111010;									@(posedge Clock);
 		in = 16'b0000000000000001;									@(posedge Clock);
-																			@(posedge Clock);	
-																			@(posedge Clock);	
-																			@(posedge Clock);	
+                                                                    @(posedge Clock);	
+                                                                    @(posedge Clock);	
+                                                                    @(posedge Clock);	
 		in = 16'b1100110011001100;									@(posedge Clock);	
 		in = 16'b0000000000000000;									@(posedge Clock);	
-																			@(posedge Clock);
-																			@(posedge Clock);
-																			@(posedge Clock);
+                                                                    @(posedge Clock);
+                                                                    @(posedge Clock);
+                                                                    @(posedge Clock);
 		#100;
 		$stop;  // End the simulation.
 	end

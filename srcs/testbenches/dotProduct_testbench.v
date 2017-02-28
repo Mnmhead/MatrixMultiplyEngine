@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps 
-`include "clogb2.v"
+// `include "clogb2.v" // vivado can't find this for some reason
 //////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) Gyorgy Wyatt Muntean 2017
 // Create Date: 02/25/2017 12:04:27 PM
@@ -15,7 +15,7 @@ module dotProduct_testbench();
     localparam DIM = 10;
     localparam A_DATA_WIDTH = 16;
     localparam B_DATA_WIDTH = 16;
-    localparam EXTRA_ADD_WIDTH = `CLOG2(DIM);
+    localparam EXTRA_ADD_WIDTH =  4;    //`CLOG2(DIM); // this isnt working for now...
     localparam RES_WIDTH = A_DATA_WIDTH + B_DATA_WIDTH + EXTRA_ADD_WIDTH;
     
     reg Clock;
