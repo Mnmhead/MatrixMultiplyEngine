@@ -37,7 +37,14 @@ module vectorSum_testbench();
 				  00000010 \
 				  00000011 \
 				  00000100 \
-				  00000101;                @posedge(Clock);
-   
+				  00000101;                @(posedge Clock);
+                                       @(posedge Clock);
+                                       @(posedge Clock);
+                                       @(posedge Clock);
+                                       @(posedge Clock);
+                                       @(posedge Clock);
 
-	
+      #100;
+      $stop;
+   end
+endmodule
