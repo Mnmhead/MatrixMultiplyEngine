@@ -12,7 +12,7 @@
 
 module nRegisterChain_testbench();
    localparam W=16;
-   localparam N=4;
+   localparam N=0;
 
    reg Clock;
 	reg [W-1:0] in;
@@ -27,7 +27,7 @@ module nRegisterChain_testbench();
 	end 
 
 	// unit under test
-	nRegisterChain #(N,W) ( .Clock(Clock), .in(in), .out(out) );
+	nRegisterChain #(N,W) uut( .Clock(Clock), .in(in), .out(out) );
 
 	// Start Simulation.	
 	initial begin

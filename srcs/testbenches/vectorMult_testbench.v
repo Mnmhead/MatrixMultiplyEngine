@@ -35,7 +35,7 @@ module vectorMult_testbench();
         // Initialize inputs
         u = 0;
         v = 0;
-        // pause for 100 ns
+        // pause for 20ns
         #20;
 		  //u = [8,8,8,8,8,8,8,8,8,8]
         u = 80'b00001000000010000000100000001000000010000000100000001000000010000000100000001000;

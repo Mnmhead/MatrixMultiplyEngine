@@ -6,25 +6,28 @@
 // Project Name: Matrix Multiply
 // Target Devices: ZYNQ702
 // Description: 
-//       This module 'stamps-out' N registers cahined togetehr by input and output.
-//	Essentially, the input to this module will assign to the output at a delay of N cycles.
+//       This module 'stamps-out' NUM_REG registers cahined togetehr by input and output.
+//	Essentially, the input to this module will assign to the output at a delay of NUM_REG cycles.
 // The bit-width of the input and output are parameterizable.
 //
 //////////////////////////////////////////////////////////////////////////////////
 
 module nRegisterChain
-   #( parameter N=1,
+   #( parameter NUM_REG=1,
       parameter W=32 )
    ( Clock, in, out );
 
-   input Clock;
-
-   // input value, a wire of width W
-   input [W-1:0] in;
+    localparam N = NUM_REG + 1;  // We allow NUM_REG to be 0, but this makes the generate loop difficult to manage.
+                                 // So we add 1, and the generate loop will not execute when NUM_REG = 0
+                                 
+    input Clock;
+    
+    // input value, a wire of width W
+    input [W-1:0] in;
    
-   // output, same width as input because eventually 'out' is simply 
-   // assigned the same value as 'in'
-   output [W-1:0] out;
+    // output, same width as input because eventually 'out' is simply 
+    // assigned the same value as 'in'
+    output [W-1:0] out;
    
     // N wires to chain the N registers
     reg [(N*W)-1:0] chain;   
@@ -34,7 +37,7 @@ module nRegisterChain
 
     // Pipe input into first register on every clock edge.
     always @(posedge Clock) begin
-      chain[W-1:0] <= in;
+        chain[W-1:0] <= in;
     end
     // Generate N-1 remaining registers.
     // We chain the output of the ith register to the input of the i+1th register.

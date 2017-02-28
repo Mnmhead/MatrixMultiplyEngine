@@ -15,7 +15,8 @@
 
 module noOverflowAdd_testbench();
    localparam WIDTH = 8;
-   localparam RES_WIDTH = 11; 
+   localparam RES_WIDTH = 11; // we will want the CLOG2 macro here
+    // RES_WIDTH = WIDTH + CLOG2(WIDTH);
 
    reg Clock;
    reg [WIDTH-1:0] a;
