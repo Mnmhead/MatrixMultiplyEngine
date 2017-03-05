@@ -40,30 +40,47 @@ module vectorSum #(
     
     reg [RES_WIDTH-1:0] temp_sum;
     reg temp_readEn;
-
-    // Note to self: Try taking out the add module and just having a bunch of shift registers...?
-
+    
+    // holds the output of the Adder, should be piped directly into the next Adder in the chain
+    wire [(RES_WIDTH*DIM)-1:0] intermediate_sums;
+    wire [(W_u*DIM)-1:0] next_elements;
+    
+    reg [RES_WIDTH-1:0] zero;
+    initial begin 
+        zero = 0;
+    end
+    
+    // initial values get piped to Adder
+    nRegisterChain #(0, W_u) initialReg( .Clock(Clock), 
+                                       .in(u[W_u-1:0]), 
+                                       .out(next_elements[W_u-1:0]) 
+                                     );
+    noOverflowAdd #(W_u, RES_WIDTH, RES_WIDTH) init_add( .Clock(Clock),
+                                                         .a(next_elements[W_u-1:0]),
+                                                         .b(zero),
+                                                         .sum(intermediate_sums[RES_WIDTH-1:0]) 
+                                                       ); 
+    
     genvar c;
     generate
-        for( c = 0; c < DIM; c = c + 1) begin : vSum
-
-            // holds the output of the Adder, should be piped directly into the next Adder in the chain
-            wire [RES_WIDTH-1:0] intermediate_sum;
-            
-            wire [W_u-1:0] next_element;
+        for( c = 1; c < DIM; c = c + 1) begin : vSum
             
             // pipe the result from the previous adder and u[c] into the next adder.
             // We must delay the element u[c] by c clock cycles, where the vector u is indexed starting at 0.
-            nRegisterChain #(c, W_u) shiftReg( .Clock(Clock), .in(u[W_u*c +: W_u]), .out(next_element) );
-            noOverflowAdd #(W_u, RES_WIDTH, RES_WIDTH) add( .Clock(Clock), .a(next_element), .b(0), .sum(intermediate_sum) );
-            
-            always @(*) begin 
-                temp_sum = intermediate_sum;
-            end
+            nRegisterChain #(c, W_u) shiftReg( .Clock(Clock), 
+                                               .in(u[W_u*c +: W_u]), 
+                                               .out(next_elements[W_u*c +: W_u]) 
+                                             );
+            noOverflowAdd #(W_u, RES_WIDTH, RES_WIDTH) add( .Clock(Clock), 
+                                                            .a(next_elements[W_u*c +: W_u]), 
+                                                            .b(intermediate_sums[RES_WIDTH*(c-1) +: RES_WIDTH]), 
+                                                            .sum(intermediate_sums[RES_WIDTH*c +: RES_WIDTH]) 
+                                                          );
         end
     endgenerate
-    
+        
     // output assignment logic
-    assign sum = temp_sum;
+    // assign sum, to be the last wire in the adder chain
+    assign sum = intermediate_sums[RES_WIDTH*(DIM-1) +: RES_WIDTH]; //temp_sum;
     assign readEn = temp_readEn;
 endmodule

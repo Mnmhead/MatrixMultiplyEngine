@@ -11,7 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module vectorSum_testbench();
-	localparam DIM = 1;  // number of elements
+	localparam DIM = 2;  // number of elements
 	localparam W_u = 8;  // bit-width of each element
 
 	reg Clock;
@@ -38,12 +38,13 @@ module vectorSum_testbench();
 		#100;
 		// u = [1,2,3,4,5]
 		//u = 80'b0000000100000010000000110000010000000101;                      @(posedge Clock);
-        u = 16'b00001000;                                                                    @(posedge Clock);
+        u = 16'b0000100000001000;                                              @(posedge Clock);
                                                                                @(posedge Clock);
                                                                                @(posedge Clock);
                                                                                @(posedge Clock);
                                                                                @(posedge Clock);
-
+                                                                               @(posedge Clock);
+                                                                               @(posedge Clock);
       #100;
       $stop;
    end
