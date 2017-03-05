@@ -34,29 +34,25 @@ module noOverflowAdd_testbench();
    // Unit Under Test
    noOverflowAdd #(WIDTH, WIDTH, RES_WIDTH) uut( .Clock(Clock), .a(a), .b(b), .sum(sum) );
    
-   integer i;
-   integer j;
    initial begin
       // Initialize inputs
       a = 0;
       b = 0;
-
-      // pause for 100ns
-      #100;
-
-      // Run the module on a large combination of inputs
-      for( i = 255; i >= 0; i = i - 11 ) begin
-         a = i;
-         for( j = 255; j >= 0; j = j - 1) begin    
-            b = j; #(2*CLOCK_PERIOD);  // wait 2 clock cycles (for readability in simulation)
-
-            // Abort the simulation and display an error if an 
-            // unexpected value is produced.
-            if( sum != (i+j)) begin
-               $display( "Error: Incorrect sum" );
-               $finish;
-            end 
-         end 
-      end 
+                                            @(posedge Clock);
+      a = 255; b = 255;                     @(posedge Clock);
+      a = 17;  b = 99;                      @(posedge Clock);
+      a = 178; b = 78;                      @(posedge Clock);
+      a = 222; b = 0;                       @(posedge Clock);
+      a = 1;   b = 3;                       @(posedge Clock);
+      a = 10;  b = 10;                      @(posedge Clock);
+      a = 69;  b = 69;                      @(posedge Clock);
+                                            @(posedge Clock);
+                                            @(posedge Clock);
+                                            @(posedge Clock);
+                                            @(posedge Clock);
+                                            @(posedge Clock);
+                                            @(posedge Clock);
+                                            @(posedge Clock);
+                                            @(posedge Clock);       
    end 
 endmodule

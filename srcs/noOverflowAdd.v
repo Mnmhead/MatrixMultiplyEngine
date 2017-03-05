@@ -22,16 +22,18 @@ module noOverflowAdd
       input [WIDTH_A-1:0] a,
       input [WIDTH_B-1:0] b,
       output [RES_WIDTH-1:0] sum );
-   /*
-    // a register to hold the output of (a + b)
-    reg [RES_WIDTH-1:0] s;
-    // output assignment
-    assign sum = s;
+   
+    // a wire and register to hold the value of (a + b)
+    wire [RES_WIDTH-1:0] s;
+    reg [RES_WIDTH-1:0] sum_reg;
     
-    // Next state logic
+    // output assignment
+    assign sum = sum_reg;
+    
+    // Register logic
+    assign s[RES_WIDTH-1:0] = a[WIDTH_A-1:0] + b[WIDTH_B-1:0];
+        
     always @(posedge Clock) begin
-        s[RES_WIDTH-1:0] <= a[WIDTH_A-1:0] + b[WIDTH_B-1:0];
+        sum_reg <= s;
     end    
-    */
-    assign sum = a[WIDTH_A-1:0] + b[WIDTH_B-1:0];
 endmodule

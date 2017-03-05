@@ -35,7 +35,7 @@ module matrix_mult #(
     rst,
     inputData,
     weightData,
-    inputAddr
+    inputAddr,
     weightAddr,
     outputData,
     outputAddr,
