@@ -34,45 +34,31 @@ module vectorSum #(
     input [(DIM*W_u)-1:0] u;
     
     // The scalar output. To prevent overflow the bit-width must be the width of an element plus
-    // the cieling of the log of the number of elements (i.e. W_u + CLOG2( DIM )).
+    // the ceiling of the log of the number of elements (i.e. W_u + CLOG2( DIM )).
     output [RES_WIDTH-1:0] sum;
     output readEn;  // single bit, signals a valid sum 
     
     reg [RES_WIDTH-1:0] temp_sum;
     reg temp_readEn;
 
-    // Note to self: Try taking out the add module and just having a bunch of shift registers...
+    // Note to self: Try taking out the add module and just having a bunch of shift registers...?
 
     genvar c;
     generate
         for( c = 0; c < DIM; c = c + 1) begin : vSum
 
+            // holds the output of the Adder, should be piped directly into the next Adder in the chain
             wire [RES_WIDTH-1:0] intermediate_sum;
-            reg [RES_WIDTH-1:0] sum_reg;  // register to hold the intermediate sum
             
-            wire [RES_WIDTH-1:0] nextInput;
             wire [W_u-1:0] next_element;
             
             // pipe the result from the previous adder and u[c] into the next adder.
             // We must delay the element u[c] by c clock cycles, where the vector u is indexed starting at 0.
             nRegisterChain #(c, W_u) shiftReg( .Clock(Clock), .in(u[W_u*c +: W_u]), .out(next_element) );
-            noOverflowAdd #(W_u, RES_WIDTH, RES_WIDTH) add( .Clock(Clock), .a(next_element), .b(nextInput), .sum(intermediate_sum) );
+            noOverflowAdd #(W_u, RES_WIDTH, RES_WIDTH) add( .Clock(Clock), .a(next_element), .b(0), .sum(intermediate_sum) );
             
-            // Assignment and register logic to pipe the output of one adder into a register then pipe the output of the register 
-            // into the next adder.
-            assign nextInput = sum_reg;
-            always @(posedge Clock) begin
-                sum_reg <= intermediate_sum;
-            end
-            
-            // if c == DIM - 1 then we are on the last iteration, so take the value out of sum_reg and assign it to
-            // final output
-            always @(*) begin
-                if( c == DIM-1 ) begin
-                    $display( "DIM %d, and c %d", DIM, c );
-                    temp_sum = nextInput;  // sum = sum_reg;
-                    temp_readEn = 1'b1;
-                end
+            always @(*) begin 
+                temp_sum = intermediate_sum;
             end
         end
     endgenerate
