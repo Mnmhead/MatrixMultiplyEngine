@@ -15,19 +15,24 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module dotProduct 
-    #( parameter DIM=8,
-       parameter A_DATA_WIDTH=32,
-       parameter B_DATA_WIDTH=32 )
-    ( Clock, A, B, DotProduct );                 
+module dotProduct #( 
+    parameter DIM=8,
+    parameter A_DATA_WIDTH=32,
+    parameter B_DATA_WIDTH=32 
+) ( 
+    Clock, 
+    A, 
+    B, 
+    DotProduct 
+);                 
 
     localparam A_WIDTH = DIM*A_DATA_WIDTH;
     localparam B_WIDTH = DIM*B_DATA_WIDTH;
+    localparam MULT_EL_WIDTH = A_DATA_WIDTH + B_DATA_WIDTH;
     localparam EXTRA_ADD_WIDTH = `CLOG2(DIM);
     localparam RES_WIDTH = A_DATA_WIDTH + B_DATA_WIDTH + EXTRA_ADD_WIDTH; 
     localparam MULT_WIDTH = A_WIDTH + B_WIDTH;  // width of the vector to hold intermediate multiplication of elements
     
-    // The clock (used later when the log(DIM) layers of adders is implemented)
     input Clock;
     
     // A and B are input vectors
@@ -37,22 +42,25 @@ module dotProduct
     // C is the scalar output
     output [RES_WIDTH-1:0] DotProduct;
 
-    // Intermediate wire to hold the products of a_i * b_i, where i is an index from 1 to DIM.
-    wire [MULT_WIDTH-1:0] mult;
-    
-    vectorMult #(DIM, A_DATA_WIDTH, B_DATA_WIDTH) uut( .Clock(Clock), .u(A), .v(B), .result(mult) );
+    // Intermediate reg to hold the products of a_i * b_i, where i is an index from 1 to DIM.
+    wire [MULT_WIDTH-1:0] vector_mult_out;
+    reg [MULT_WIDTH-1:0] vector_mult;
+    vectorMult #(DIM, A_DATA_WIDTH, B_DATA_WIDTH) vm( .Clock(Clock), .u(A), .v(B), .result(vector_mult_out) );
 
-    // Naive computation of dot product...we simply sum up the multiplied elements of a and b sequantially
-    reg [RES_WIDTH-1:0] s;
-    integer i;
-    always @(*) begin 
-        s = {(RES_WIDTH){1'b0}};
-        for( i = 0; i < DIM; i = i + 1 ) begin
-            // indexed part-select...
-            // identifier[base : width]
-            s = s + mult[(A_DATA_WIDTH+B_DATA_WIDTH) * i +: (A_DATA_WIDTH+B_DATA_WIDTH)];
-        end  
+    always @(posedge Clock) begin
+        vector_mult <= vector_mult_out;
+    end    
+
+    // Instantiate a vectorSum module to sum all elements of the vector of element-wise products (mult).
+    wire [RES_WIDTH-1:0] vector_sum_out;
+    reg [RES_WIDTH-1:0] vector_sum;
+    wire readEn;
+    vectorSum #(DIM, MULT_EL_WIDTH) vs( .Clock(Clock), .u(mult), .sum(vector_sum_out), .readEn(readEn) );
+    
+    always @(posedge Clock) begin
+        vector_sum <= vector_sum_out;
     end
     
-    assign DotProduct = s;      
+    // assign output
+    assign DotProduct = vector_sum;
 endmodule

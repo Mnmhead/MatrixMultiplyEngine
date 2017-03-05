@@ -12,7 +12,7 @@
 
 module nRegisterChain_testbench();
    localparam W=16;
-   localparam N=0;
+   localparam N=3;
 
    reg Clock;
 	reg [W-1:0] in;

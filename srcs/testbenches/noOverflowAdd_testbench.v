@@ -32,7 +32,7 @@ module noOverflowAdd_testbench();
    end 
 
    // Unit Under Test
-   noOverflowAdd #(WIDTH, RES_WIDTH) uut( .Clock(Clock), .a(a), .b(b), .sum(sum) );
+   noOverflowAdd #(WIDTH, WIDTH, RES_WIDTH) uut( .Clock(Clock), .a(a), .b(b), .sum(sum) );
    
    integer i;
    integer j;
