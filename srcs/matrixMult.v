@@ -65,11 +65,17 @@ module matrix_mult #(
     reg [OUTPUT_FEATURES-1:0] next_o_state;
     
     // State Encodings
+    parameter begin_batch = 1'b0;
     parameter end_batch = OUTPUT_FEATURES;  // When we have dot_product-ed 'O' rows
                                             // with a single row of A, then we know we have
                                             // finished the single row of A and we can signal
                                             // the DMA to write out outputData.
     parameter end_mm = BATCH_SIZE;
+
+     
+    // maybe we can first test this FSM by checking that it goes through the
+    // right number of states ( and maybe that it activates the outputWrEn signal at
+    // the right times)
 
 
     // State Logic
@@ -92,8 +98,18 @@ module matrix_mult #(
               //    we need to directly pipe our dotProduct result into the outputData 
               //    buffer. Simultaneously, we need to set outputWrEn for the single
               //    cycle (or maybe 2 cycles) in which the outputData buffer is valid.
+              // 6. Lastly...
+              //    If o_state is equal to 0, then this means we need to read in the 
+              //    next line of A (wait until o_state = 1 to read in line of B).
               case(o_state)
+             
+                 begin_batch:
+                    // Read in line of A
+                  
+                 default:
 
+
+ 
               endcase
         
         endcase 
