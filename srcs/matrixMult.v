@@ -57,8 +57,55 @@ module matrix_mult #(
     output [LOG_BATCH_SIZE-1:0] outputAddr;
     output outputWrEn;
 
-    // Your verilog here
 
+    // Memory to FSM state
+    reg [BATCH_SIZE-1:0] batch_state;   // needs only to be CLOGB2(BATCH_SIZE)
+    reg [BATCH_SIZE-1:0] next_batch_state;
+    reg [OUTPUT_FEATURES-1:0] o_state;  // needs only to be CLOGB2(OUTPUT_FEATURES)
+    reg [OUTPUT_FEATURES-1:0] next_o_state;
+    
+    // State Encodings
+    parameter end_batch = OUTPUT_FEATURES;  // When we have dot_product-ed 'O' rows
+                                            // with a single row of A, then we know we have
+                                            // finished the single row of A and we can signal
+                                            // the DMA to write out outputData.
+    parameter end_mm = BATCH_SIZE;
+
+
+    // State Logic
+    always @(*) begin
+       case(batch_state)
+
+          end_mm:
+              // If batch_state is end_mm, then we have finished computing the last
+              // batch (last line of A), thus 
+
+
+          default:
+              // default case:
+              // 1. Read next line of matrix B, line o_state
+              // 2. compute dot product of current batch line and line o_state of B
+              // 3. Pipe the output of dot product into a shift register which 
+              //    delays output by (O-o_state) cycles.
+              // 4. Increment o_state by 1
+              // 5. If o_state is equal to end_batch (or maybe end_batch-1), then
+              //    we need to directly pipe our dotProduct result into the outputData 
+              //    buffer. Simultaneously, we need to set outputWrEn for the single
+              //    cycle (or maybe 2 cycles) in which the outputData buffer is valid.
+              case(o_state)
+
+              endcase
+        
+        endcase 
+    end
+
+
+    // DFFs, next state is reached at each clock cycle
+    always @(posedge Clock) begin
+       // no Reset, ignoring reset signal
+       batch_state <= next_batch_state;
+       o_state <= next_o_state;
+    end
 endmodule // matrix_mult
 
 // 1. read first row of A from memory
