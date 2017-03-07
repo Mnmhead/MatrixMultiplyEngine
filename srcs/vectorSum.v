@@ -16,18 +16,14 @@
 
 module vectorSum #( 
     parameter DIM=2,
-    parameter W_u=32 
+    parameter W_u=32,
+    parameter RES_WIDTH=33
 ) ( 
     Clock, 
     u, 
-    sum,
-    readEn  // single bit to signal when the sum value is valid and ready to be read (read window is only one clock cycle).
+    sum
 );
     
-    // Helpful 'local constants'
-    localparam EXTRA_WIDTH = `CLOG2(DIM);
-    localparam RES_WIDTH = W_u + EXTRA_WIDTH;
-
     // Inputs
     input Clock;
     // Input vectors u and v. Each has DIM amount of elements with bit-width specified by parameters,
@@ -38,7 +34,7 @@ module vectorSum #(
     // The scalar output. To prevent overflow the bit-width must be the width of an element plus
     // the ceiling of the log of the number of elements (i.e. W_u + CLOG2( DIM )).
     output [RES_WIDTH-1:0] sum;
-    output readEn;  // single bit, signals a valid sum 
+    
     
     // Constant Driven 0 Value
     // For simplicity, we add the first element with a 'constantly-driven' 0 value.
@@ -87,5 +83,4 @@ module vectorSum #(
     // Output Assignment Logic
     // Assign sum to be the last wire in the adder chain.
     assign sum = intermediate_sums[RES_WIDTH*(DIM-1) +: RES_WIDTH];
-    assign readEn = 0;
 endmodule

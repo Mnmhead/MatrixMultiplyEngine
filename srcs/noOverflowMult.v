@@ -21,11 +21,15 @@ module noOverflowMult
       input [W_b-1:0] b,
       output [W_a+W_b-1:0] product );
     
-    reg [W_a+W_b-1:0] p;
-    assign product = p;
+    wire [W_a+W_b-1:0] p;
+    reg [W_a+W_b-1:0] product_reg;
+    
+    assign product = product_reg;
+    
+    assign p = a[W_a-1:0] * b[W_b-1:0];
     
     // Next state logic
     always @(posedge Clock) begin
-        p[W_a+W_b-1:0] <= a[W_a-1:0] * b[W_b-1:0];
+        product_reg <= p;
     end        
 endmodule

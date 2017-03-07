@@ -30,33 +30,22 @@ module noOverflowMult_testbench();
     // Unit Under Test
     noOverflowMult #(W_a, W_b) uut( .Clock(Clock), .a(a), .b(b), .product(product) );
         
-    // Begin testing different inputs
-    integer i;
-    integer j;
-    localparam max_a = 255;  // why cant I use (1<<W_a)-1? For some reason the localparam always evaluates to 0
-    localparam max_b = 255;
     initial begin  
-        // Initialize inputs
-        a = 0;
-        b = 0;
-        
-        // pause for 100 ns
-        #100;
-        
-        // Run the module on every combination of inputs.
-        // Display an error and exit if an incorrect result is produced.
-        for( i = 0; i < max_a; i = i + 1 ) begin
-            a = i;   
-            for( j = 0; j < max_b; j = j + 1 ) begin
-                b= j; #(2*CLOCK_PERIOD);  // wait 2 clock periods (for readablility in simulation)
-    
-                // Abort the simulation and display an error if an 
-                // unexpected value is produced.
-                if( product != (i*j)) begin
-                    $display( "Error: incorrect product" );
-                    $finish;
-                end
-            end
-        end  
+         // Initialize inputs
+         // pause for 100 ns
+         #100;
+         a = 0;
+         b = 0;
+                                               @(posedge Clock);
+         a = 255; b = 255;                     @(posedge Clock);
+         a = 17;  b = 99;                      @(posedge Clock);
+         a = 178; b = 78;                      @(posedge Clock);
+         a = 222; b = 0;                       @(posedge Clock);
+         a = 1;   b = 3;                       @(posedge Clock);
+         a = 10;  b = 10;                      @(posedge Clock);
+         a = 69;  b = 69;                      @(posedge Clock);
+                                               @(posedge Clock);
+                                               @(posedge Clock);
+                                               @(posedge Clock);  
     end 
 endmodule
