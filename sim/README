@@ -1,0 +1,20 @@
+Gyorgy Wyatt Muntean 2017
+
+--OVERVIEW--
+This simulation requires iverilog to run.
+The scripts directory contains the scripts and memory initialization files.
+The tb directory contains testbenches for sources of this project. The top-level and
+relevant testbench is 'matrixMult_testbench.v'.
+The wf_config directory is home to wavefrom configuration files for this simulation.
+
+--INSTRUCTIONS--
+This simulation relys upon generated memory initialization files. In order to
+generate and run the simulation, type 'make'.
+
+To clean up any log files type, 'make clean'.
+
+If one wishes to use non-default memory initialization files, the generation script can
+produce any size and dimension inputs. To run simulation only and not generation, 
+type 'make iver'.
+
+To re-generate the default memory initialization files, type 'make gen'.
