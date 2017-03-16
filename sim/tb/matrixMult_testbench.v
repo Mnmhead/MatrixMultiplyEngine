@@ -114,7 +114,7 @@ module matrixMult_testbench();
         if( outputWrEn ) begin
             expectedOut = test_out[ i ];
             
-            $display("\t\ttime, clk, inputData, weightData, outputData,  ref");
+            $display("\t\t\t\ttime  clk  input   weight    outputData                        expectedData");
             $monitor("%d,   %b, %h,   %h, %h, %h",
                 $time,clk,inputData,weightData,outputData,expectedOut);
     
