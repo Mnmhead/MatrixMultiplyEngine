@@ -1,5 +1,4 @@
 `timescale 1ns / 10ps
-`include "clogb2.v"
 /*
  * This module serves as a testbench for the parallel_adder module.
  * parallelAdder.v is incomplete!
@@ -7,8 +6,7 @@
 module parallelAdder_testbench();
     localparam DIM = 2;
     localparam WIDTH = 16;
-    localparam EXTRA_ADD_WIDTH = `CLOG2(DIM);
-    localparam RES_WIDTH = WIDTH + EXTRA_ADD_WIDTH;
+    localparam RES_WIDTH = WIDTH + 4;
 
     reg Clock;
     reg [(DIM*WIDTH)-1:0] vector;

@@ -14,14 +14,16 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module noOverflowAdd
-    #( parameter WIDTH_A=32,
-       parameter WIDTH_B=32,
-       parameter RES_WIDTH=37 )
-    ( input Clock,
-      input [WIDTH_A-1:0] a,
-      input [WIDTH_B-1:0] b,
-      output [RES_WIDTH-1:0] sum );
+module noOverflowAdd #( 
+    parameter WIDTH_A=32,
+    parameter WIDTH_B=32,
+    parameter RES_WIDTH=37 
+) ( 
+    input Clock,
+    input [WIDTH_A-1:0] a,
+    input [WIDTH_B-1:0] b,
+    output [RES_WIDTH-1:0] sum 
+);
    
     // a wire and register to hold the value of (a + b)
     wire [RES_WIDTH-1:0] s;

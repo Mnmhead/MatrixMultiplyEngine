@@ -57,136 +57,125 @@ module matrixMult #(
     output outputWrEn;
 
 
-    // Memories for FSM state
-    reg [BATCH_SIZE-1:0] batch_state;   // needs only to be CLOGB2(BATCH_SIZE)
-    reg [BATCH_SIZE-1:0] next_batch_state;
-    reg [OUTPUT_FEATURES-1:0] o_state;  // needs only to be CLOGB2(OUTPUT_FEATURES)
-    reg [OUTPUT_FEATURES-1:0] next_o_state;
-    reg validOutput;
-    // initial FSM state
-    initial batch_state = 0;
-    initial o_state = 0;
-    initial next_batch_state = 0;
-    initial next_o_state = 0;
-    initial validOutput = 0;
-      
-      
-    // State Encodings
-    parameter begin_batch = 1'b0;
-    parameter end_batch = OUTPUT_FEATURES;  // When we have dot_product-ed 'O' rows
-                                            // with a single row of A, then we know we have
-                                            // finished the single row of A and we can signal
-                                            // the DMA to write out outputData.
-    parameter end_mm = BATCH_SIZE;
+    // Register to track write address
+    reg [LOG_BATCH_SIZE-1:0] outAddr;
+    initial outAddr = 32'h40000000;  // Base address for output (this is arbitrary for now, should be changed based on DMA module)
+    reg [LOG_BATCH_SIZE-1:0] outRowNumber;
+    initial outRowNumber = 0;
+    
 
-    // Intermediate buffer to hold fully computed row of C
-    reg [OUTPUT_FEATURES*OUTPUT_WIDTH-1:0] intermediateData;
-     
     // Intermediate Registers (for the dot product module)
     wire [OUTPUT_WIDTH-1:0] dotprodData;  // Holds a row of dot product outputs
     wire readEn;  // signal to indicate when a dotProduct has finished and is readable
     reg validLine;
     reg [LOG_OUTPUT_FEATURES-1:0] col_counter;  // a counter to track which row we should put our dot product data into next
     initial validLine = 0;
-    initial col_counter = 0;
+    initial col_counter = OUTPUT_FEATURES - 1;
     
     
-    // Logic to determine when a full line of the C matrix has been written to 'intermediateData'
+    // Logic to fill the intermediate data buffer
+    reg [OUTPUT_FEATURES*OUTPUT_WIDTH-1:0] intermediateData;
     always @(posedge clk) begin
         if( readEn ) begin      
             case(col_counter)
-                OUTPUT_FEATURES - 1:
+                0:
                     begin
                         intermediateData[OUTPUT_WIDTH*col_counter +: OUTPUT_WIDTH] = dotprodData;
                         validLine = 1;
-                        col_counter = 0;
+                        col_counter = OUTPUT_FEATURES - 1;
+                        
+                        outAddr = outAddr + (outRowNumber*OUTPUT_FEATURES*OUTPUT_WIDTH);
+                        outRowNumber = outRowNumber + 1;
                     end
                     
                 default:
                     begin
                         validLine = 0;
                         intermediateData[OUTPUT_WIDTH*col_counter +: OUTPUT_WIDTH] = dotprodData;
-                        col_counter = col_counter + 1;
+                        col_counter = col_counter - 1;
                     end
-                    
             endcase
         end
     end
     
     
-    // Addign Ouput-Write-Enable flag to validLine register value
-    assign outputWrEn = validLine;
-    always @(posedge clk) begin
-        // logic to ensure validLine is only high for one clock cycle
-        //if( validLine ) begin
-        //    validLine <= 0;
-        //end
-    end
-   
+    // Dot product module instantiation
+    dotProduct #( 
+        INPUT_FEATURES, 
+        INPUT_WIDTH, 
+        WEIGHT_WIDTH, 
+        OUTPUT_WIDTH 
+    ) dotProduct( 
+        .Clock(clk), 
+        .start(start), 
+        .A(inputData), 
+        .B(weightData), 
+        .DotProduct(dotprodData), 
+        .readEn(readEn) 
+    );    
     
-    dotProduct #( INPUT_FEATURES, 
-                  INPUT_WIDTH, 
-                  WEIGHT_WIDTH, 
-                  OUTPUT_WIDTH ) 
-                dotProduct( .Clock(clk), .start(start), .A(inputData), .B(weightData), .DotProduct(dotprodData), .readEn(readEn) );    
     
-    
-    // Assign the intermeditae buffer to the actual output buffer.
-    assign outputData = intermediateData;
+    // Ouput-Data Assignment Logic
+    assign outputData = intermediateData;   // assign the intermediate buffer to the actual output buffer.
+    assign outputWrEn = validLine;          // send signal to writer that buffer is ready.
+    assign outputAddr = outAddr;            // assign the output address to the address of the row we just computed.
     
 
-    // State Logic
+    // Memories for FSM state
+    reg [LOG_BATCH_SIZE-1:0] batch_state;
+    reg [LOG_BATCH_SIZE-1:0] next_batch_state;
+    reg [LOG_OUTPUT_FEATURES-1:0] o_state;
+    reg [LOG_OUTPUT_FEATURES-1:0] next_o_state;
+    // initial FSM state
+    initial batch_state = 0;
+    initial o_state = 0;
+    initial next_batch_state = 0;
+    initial next_o_state = 0;
+
+    // Finite State Logic for reading memory
+    reg [LOG_BATCH_SIZE-1:0] inAddr;
+    reg [LOG_OUTPUT_FEATURES-1:0] wAddr;
+    localparam baseInputAddr = 32'h20000000;
+    localparam baseWeightAddr = 32'h30000000;
+        
+    // State Encodings
+    parameter begin_batch = 1'b0;
+    parameter end_batch = OUTPUT_FEATURES;
+    parameter end_mm = BATCH_SIZE;
+   
+    // FSM for reading data
     always @(*) begin
        case(batch_state)
-          end_mm: 
+          end_mm:   // End state
             begin
+                // loop forever on the final state
                 next_batch_state = next_batch_state;
-                // If batch_state is end_mm, then we have finished computing the last
-                // batch (last line of A).
             end
 
           default: 
             begin
-                // default case:
-                // 1. Read next line of matrix B, line o_state
-                // 2. compute dot product of current batch line and line o_state of B
-                // 3. Pipe the output of dot product into a shift register which 
-                //    delays output by (O-o_state) cycles.
-                // 4. Increment o_state by 1
-                // 5. If o_state is equal to end_batch (or maybe end_batch-1), then
-                //    we need to directly pipe our dotProduct result into the outputData 
-                //    buffer. Simultaneously, we need to set outputWrEn for the single
-                //    cycle (or maybe 2 cycles) in which the outputData buffer is valid.
-                // 6. Lastly...
-                //    If o_state is equal to 0, then this means we need to read in the 
-                //    next line of A (wait until o_state = 1 to read in line of B).
                 case(o_state)
-                    begin_batch: 
+                    begin_batch:    // beginning state for an individual row of A, read in the first lines of memory by supplying addresses
                         begin
                             next_o_state = next_o_state + 1;
-                            // Read in line of A
-                            //$display( "batch: %d, o_feature: %d", batch_state, o_state);
-                            //$display( "Read line %d of A", batch_state );
+                            // Read in line, batch_state, of A
+                            inAddr = baseInputAddr + (batch_state*INPUT_WIDTH);
+                            // Read in line, o_state, of B
+                            wAddr = baseWeightAddr;
                         end
                   
-                    end_batch:
+                    end_batch:      // end state for an individual row of A
                         begin
-                            // this is the last row of B to read
-                                            
-                            // increment the batch state, 
-                            // set the output_feature state to 0 again,
-                            // now onto the next batch
+                            // Read in last row of B
+                            wAddr = wAddr + WEIGHT_WIDTH;  
                             next_batch_state = next_batch_state + 1;
                             next_o_state = 0;
-                            //$display( "batch: %d, o_feature: %d", batch_state, o_state);
-                            //$display( "Reading last line, %d, of B", o_state );
                         end
                         
-                    default: 
+                    default:        // default state, simply read in next row of B
                         begin
+                            wAddr = wAddr + WEIGHT_WIDTH;
                             next_o_state = next_o_state + 1;
-                            //$display( "batch: %d, o_feature: %d", batch_state, o_state);
-                            //$display( "Reading line, %d, of B", o_state );
                         end
                         
                 endcase
@@ -195,21 +184,13 @@ module matrixMult #(
         endcase 
     end
     
-    always @(posedge clk) begin
-        $display( "Reading line %d of B while on line %d of A", o_state, batch_state );
-    end
+    // Address output assignment
+    assign inputAddr = inAddr;
+    assign weightAddr = wAddr;
 
     // DFFs, next state is reached at each clock cycle
     always @(posedge clk) begin
-       // no Reset, ignoring reset signal
        batch_state <= next_batch_state;
        o_state <= next_o_state;
     end
-endmodule // matrix_mult
-
-// 1. read first row of A from memory
-// 2. read each column of B from memory and pipe A's row and all B's rows to 
-//    a dotProduct module
-// 3. write results of each dot product to a point in memory that coorseponds to the correct
-//    memory location for the result matrix, C.
-// 4. repeat this process for all rows of A
+endmodule  // matrix_mult

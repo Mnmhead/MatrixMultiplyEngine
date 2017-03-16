@@ -12,9 +12,15 @@
  * THIS MODULE IS INCOMPLETE AND DOES NOT WORK.
  */
 
-module parallelAdder #( parameter DIM = 8,
-                          parameter W = 64 )
-                       ( Clock, vector, finished, sum);
+module parallelAdder #( 
+    parameter DIM = 8,
+    parameter W = 64 
+) ( 
+    Clock, 
+    vector, 
+    finished, 
+    sum
+);
     
     // Represents the maximum data width we need for the resulting sum (to avoid overflow)
     localparam EXTRA_ADD_WIDTH = `CLOG2(DIM);

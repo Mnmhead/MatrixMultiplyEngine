@@ -12,10 +12,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module nRegisterChain
-   #( parameter NUM_REG=1,
-      parameter W=32 )
-   ( Clock, in, out );
+module nRegisterChain #( 
+    parameter NUM_REG=1,
+    parameter W=32 
+) ( 
+    Clock, 
+    in, 
+    out 
+);
 
     localparam N = NUM_REG + 1;  // We allow NUM_REG to be 0, but this makes the generate loop difficult to manage.
                                  // So we add 1, and the generate loop will not execute when NUM_REG = 0

@@ -13,13 +13,15 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module noOverflowMult 
-    #( parameter W_a=32,
-       parameter W_b=32 )
-    ( input Clock,
-      input [W_a-1:0] a,
-      input [W_b-1:0] b,
-      output [W_a+W_b-1:0] product );
+module noOverflowMult #( 
+    parameter W_a=32,
+    parameter W_b=32 
+) ( 
+    input Clock,
+    input [W_a-1:0] a,
+    input [W_b-1:0] b,
+    output [W_a+W_b-1:0] product 
+);
     
     wire [W_a+W_b-1:0] p;
     reg [W_a+W_b-1:0] product_reg;

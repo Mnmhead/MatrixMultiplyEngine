@@ -12,11 +12,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module vectorMult
-    #( parameter DIM=10,
-       parameter W_u=32,
-       parameter W_v=32 )
-    ( Clock, u, v, result );
+module vectorMult #( 
+    parameter DIM=10,
+    parameter W_u=32,
+    parameter W_v=32 
+) ( 
+    Clock, 
+    u, 
+    v, 
+    result 
+);
       
       // Clock
       input Clock;
