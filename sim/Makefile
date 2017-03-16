@@ -21,7 +21,7 @@ IVERARGS=-DVCD_DUMP
 test: gen iver
 
 gen:
-	python $(SCR_DIR)/gen_inputs.py
+	#python $(SCR_DIR)/gen_inputs.py
 
 iver:
 	iverilog -s $(TB) $(IVERARGS) -o $(EXE) tb/$(TB).v $(SRCS) | tee $(LOGF)

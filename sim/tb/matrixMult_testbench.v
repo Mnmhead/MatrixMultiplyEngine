@@ -46,14 +46,14 @@ module matrixMult_testbench();
    // Input vectors and expected output vectors
    reg [INPUT_FEATURES*INPUT_WIDTH-1:0] test_inputData [BATCH_SIZE-1:0];  // M*N
    reg [INPUT_FEATURES*WEIGHT_WIDTH-1:0] test_weightData [OUTPUT_FEATURES-1:0];  // O*N
-   reg [OUTPUT_FEATURES*OUTPUT_WIDTH-1:0] test_dout [BATCH_SIZE-1:0];
+   reg [OUTPUT_FEATURES*OUTPUT_WIDTH-1:0] test_out [BATCH_SIZE-1:0];
    initial begin
       $readmemh(INPUT_MATRIX, test_inputData, 0, BATCH_SIZE-1);
       $readmemh(WEIGHT_MATRIX, test_weightData, 0, OUTPUT_FEATURES-1);
-      $readmemh(OUT_MATRIX, test_dout, 0, BATCH_SIZE-1);
+      $readmemh(OUT_MATRIX, test_out, 0, BATCH_SIZE-1);
    end
 
-   // Indices
+   // Input vector assignment logic
    reg rst;
    reg [LOG_BATCH_SIZE-1:0] inputIdx;
    reg [LOG_OUTPUT_FEATURES-1:0] weightIdx;
@@ -62,12 +62,12 @@ module matrixMult_testbench();
    always@(posedge clk) begin
 		if( rst ==  1'b1 ) begin
 			inputIdx 	<= 0;
-         weightIdx   <= 0;
+            weightIdx   <= 0;
 		end else if( weightIdx == OUTPUT_FEATURES - 1 ) begin
-         weightIdx   <= 0;
-         inputIdx    <= inputIdx+1;
-      end else begin
-   		weightIdx   <= weightIdx+1;
+             weightIdx   <= 0;
+             inputIdx    <= inputIdx+1;
+        end else begin
+             weightIdx   <= weightIdx+1;
 		end
 	end
 
@@ -103,132 +103,52 @@ module matrixMult_testbench();
       #(CLOCK_PERIOD/2);
       clk = ~clk;
    end 
+   
+   // Output checking and error handling
+   reg [OUTPUT_FEATURES*OUTPUT_WIDTH-1:0] expectedOut;
+   integer i;
+   integer errors;
+   initial i = 0;
+   initial errors = 0;
+   always @(posedge clk) begin
+        if( outputWrEn ) begin
+            expectedOut = test_out[ i ];
+            
+            $display("\t\ttime, clk, inputData, weightData, outputData,  ref");
+            $monitor("%d,   %b, %h,   %h, %h, %h",
+                $time,clk,inputData,weightData,outputData,expectedOut);
+    
+            if (outputData != expectedOut) begin
+                $display("[Info] Error. Expected out %d does not match actual out %d.", expectedOut, outputData);
+                errors = errors + 1;
+            end
+            
+            i = i + 1;
+        end
+   end
 
-
-	// Keep track of errors
-	integer errors;
-
+    // Simulation start
 	initial begin
-		// Initialize simulation variables
-		errors = 0;
-
 		// Initialize Inputs
 		rst = 1;	
 		clk = 0;
 		start = 0;
-		
-		@(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
+		#(8*CLOCK_PERIOD)
 
 		// Start module by de-asserting reset
 		rst = 0;
 		@(posedge clk);
 		start = 1; // send start signal exactly one cycle after first 'read'
-
-
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-        @(posedge clk);
-                                                                
-
-/*
-		$display("\t\ttime, clk,   idx, inputData, weightData, outputData,  ref");
-		$monitor("%d,   %b,   %d,   %h,   %h, %h, %h",
-			$time,clk,inputIdx,inputData,weightData,outputData,delayedOut);
-
-		if (outputData != delayedOut) begin
-			$display("[Info] Error. Expected out %d does not match actual out %d.", delayedOut, outputData);
-			errors = errors + 1;
-		end
-
-
-		$display ("Simulation Done!");
-		if (errors == 0)
-			$display("Validation successful!");
-		else
-			$display("Validataion failure: %d out of %d errors!", errors, TEST_SIZE);
-*/
+        #(100*CLOCK_PERIOD)
+                                                      
+        // End of simulation summary
+		$display ("Simulation Complete.");
+		if (errors == 0) begin
+			$display("Validation successful.");
+		end else begin
+			$display("Validataion failure: %d error(s).", errors);
+        end
+        
 		$finish;
 	end
 endmodule  // matrixMult_testbench

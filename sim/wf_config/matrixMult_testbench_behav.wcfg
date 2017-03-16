@@ -12,17 +12,21 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="251819419fs"></ZoomEndTime>
-      <Cursor1Time time="169940000fs"></Cursor1Time>
+      <ZoomEndTime time="631637253fs"></ZoomEndTime>
+      <Cursor1Time time="499315000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="212"></NameColumnWidth>
-      <ValueColumnWidth column_width="1034"></ValueColumnWidth>
+      <ValueColumnWidth column_width="206"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="28" />
+   <WVObjectSize size="8" />
    <wvobject type="logic" fp_name="/matrixMult_testbench/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/matrixMult_testbench/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/matrixMult_testbench/start">
       <obj_property name="ElementShortName">start</obj_property>
@@ -32,104 +36,20 @@
       <obj_property name="ElementShortName">inputData[15:0]</obj_property>
       <obj_property name="ObjectShortName">inputData[15:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/A">
-      <obj_property name="ElementShortName">A[15:0]</obj_property>
-      <obj_property name="ObjectShortName">A[15:0]</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/matrixMult_testbench/weightData">
       <obj_property name="ElementShortName">weightData[31:0]</obj_property>
       <obj_property name="ObjectShortName">weightData[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/B">
-      <obj_property name="ElementShortName">B[31:0]</obj_property>
-      <obj_property name="ObjectShortName">B[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/matrixMult_testbench/outputData">
       <obj_property name="ElementShortName">outputData[127:0]</obj_property>
       <obj_property name="ObjectShortName">outputData[127:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/matrixMult_testbench/uut/dotProduct/readEn">
-      <obj_property name="ElementShortName">readEn</obj_property>
-      <obj_property name="ObjectShortName">readEn</obj_property>
-   </wvobject>
    <wvobject type="logic" fp_name="/matrixMult_testbench/outputWrEn">
       <obj_property name="ElementShortName">outputWrEn</obj_property>
       <obj_property name="ObjectShortName">outputWrEn</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/matrixMult_testbench/rst">
-      <obj_property name="ElementShortName">rst</obj_property>
-      <obj_property name="ObjectShortName">rst</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/test_inputData">
-      <obj_property name="ElementShortName">test_inputData[7:0][15:0]</obj_property>
-      <obj_property name="ObjectShortName">test_inputData[7:0][15:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/test_weightData">
-      <obj_property name="ElementShortName">test_weightData[7:0][31:0]</obj_property>
-      <obj_property name="ObjectShortName">test_weightData[7:0][31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/test_dout">
-      <obj_property name="ElementShortName">test_dout[7:0][127:0]</obj_property>
-      <obj_property name="ObjectShortName">test_dout[7:0][127:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/inputIdx">
-      <obj_property name="ElementShortName">inputIdx[2:0]</obj_property>
-      <obj_property name="ObjectShortName">inputIdx[2:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/weightIdx">
-      <obj_property name="ElementShortName">weightIdx[2:0]</obj_property>
-      <obj_property name="ObjectShortName">weightIdx[2:0]</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/matrixMult_testbench/errors">
       <obj_property name="ElementShortName">errors[31:0]</obj_property>
       <obj_property name="ObjectShortName">errors[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/inputAddr">
-      <obj_property name="ElementShortName">inputAddr[2:0]</obj_property>
-      <obj_property name="ObjectShortName">inputAddr[2:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/weightAddr">
-      <obj_property name="ElementShortName">weightAddr[2:0]</obj_property>
-      <obj_property name="ObjectShortName">weightAddr[2:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/outputAddr">
-      <obj_property name="ElementShortName">outputAddr[2:0]</obj_property>
-      <obj_property name="ObjectShortName">outputAddr[2:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/matrixMult_testbench/uut/dotProduct/Clock">
-      <obj_property name="ElementShortName">Clock</obj_property>
-      <obj_property name="ObjectShortName">Clock</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/A">
-      <obj_property name="ElementShortName">A[15:0]</obj_property>
-      <obj_property name="ObjectShortName">A[15:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/B">
-      <obj_property name="ElementShortName">B[31:0]</obj_property>
-      <obj_property name="ObjectShortName">B[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/matrixMult_testbench/uut/dotProduct/start">
-      <obj_property name="ElementShortName">start</obj_property>
-      <obj_property name="ObjectShortName">start</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/DotProduct">
-      <obj_property name="ElementShortName">DotProduct[15:0]</obj_property>
-      <obj_property name="ObjectShortName">DotProduct[15:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/A_vec">
-      <obj_property name="ElementShortName">A_vec[15:0]</obj_property>
-      <obj_property name="ObjectShortName">A_vec[15:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/B_vec">
-      <obj_property name="ElementShortName">B_vec[31:0]</obj_property>
-      <obj_property name="ObjectShortName">B_vec[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/matrixMult_testbench/uut/dotProduct/readEn">
-      <obj_property name="ElementShortName">readEn</obj_property>
-      <obj_property name="ObjectShortName">readEn</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/matrixMult_testbench/uut/dotProduct/FINISH_DELAY">
-      <obj_property name="ElementShortName">FINISH_DELAY[31:0]</obj_property>
-      <obj_property name="ObjectShortName">FINISH_DELAY[31:0]</obj_property>
    </wvobject>
 </wave_config>
