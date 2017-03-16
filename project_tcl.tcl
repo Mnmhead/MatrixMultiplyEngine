@@ -135,14 +135,14 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/nRegisterChain.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/noOverflowMult.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/noOverflowAdd.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/clogb2.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/vectorSum.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/vectorMult.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/dotProduct.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/matrixMult.v"]"\
+ "[file normalize "$origin_dir/srcs/nRegisterChain.v"]"\
+ "[file normalize "$origin_dir/srcs/noOverflowMult.v"]"\
+ "[file normalize "$origin_dir/srcs/noOverflowAdd.v"]"\
+ "[file normalize "$origin_dir/srcs/clogb2.v"]"\
+ "[file normalize "$origin_dir/srcs/vectorSum.v"]"\
+ "[file normalize "$origin_dir/srcs/vectorMult.v"]"\
+ "[file normalize "$origin_dir/srcs/dotProduct.v"]"\
+ "[file normalize "$origin_dir/srcs/matrixMult.v"]"\
 ]
 add_files -norecurse -fileset $obj $files
 
@@ -177,36 +177,36 @@ if {[string equal [get_filesets -quiet sim_1] ""]} {
 # Set 'sim_1' fileset object
 set obj [get_filesets sim_1]
 set files [list \
- "[file normalize "$origin_dir/MatrixMultiplyEngine/srcs/vectorSum.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/matrixMult_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/dotProduct_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/dotProduct_testbench2.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/noOverflowMult_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/parallelAdder_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/noOverflowAdd_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/nRegisterChain_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/vectorMult_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/parallelAdder4_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/tb/vectorSum_testbench.v"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/scripts/input_matrix.mif"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/scripts/weight_matrix.mif"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/scripts/out_matrix.mif"]"\
- "[file normalize "$origin_dir/MatrixMultiplyEngine/sim/wf_config/matrixMult_testbench_behav.wcfg"]"\
+ "[file normalize "$origin_dir/srcs/vectorSum.v"]"\
+ "[file normalize "$origin_dir/sim/tb/matrixMult_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/dotProduct_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/dotProduct_testbench2.v"]"\
+ "[file normalize "$origin_dir/sim/tb/noOverflowMult_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/parallelAdder_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/noOverflowAdd_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/nRegisterChain_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/vectorMult_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/parallelAdder4_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/tb/vectorSum_testbench.v"]"\
+ "[file normalize "$origin_dir/sim/scripts/input_matrix.mif"]"\
+ "[file normalize "$origin_dir/sim/scripts/weight_matrix.mif"]"\
+ "[file normalize "$origin_dir/sim/scripts/out_matrix.mif"]"\
+ "[file normalize "$origin_dir/sim/wf_config/matrixMult_testbench_behav.wcfg"]"\
 ]
 add_files -norecurse -fileset $obj $files
 
 # Set 'sim_1' fileset file properties for remote files
-set file "$origin_dir/MatrixMultiplyEngine/sim/scripts/input_matrix.mif"
+set file "$origin_dir/sim/scripts/input_matrix.mif"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
 set_property "file_type" "Memory Initialization Files" $file_obj
 
-set file "$origin_dir/MatrixMultiplyEngine/sim/scripts/weight_matrix.mif"
+set file "$origin_dir/sim/scripts/weight_matrix.mif"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
 set_property "file_type" "Memory Initialization Files" $file_obj
 
-set file "$origin_dir/MatrixMultiplyEngine/sim/scripts/out_matrix.mif"
+set file "$origin_dir/sim/scripts/out_matrix.mif"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
 set_property "file_type" "Memory Initialization Files" $file_obj

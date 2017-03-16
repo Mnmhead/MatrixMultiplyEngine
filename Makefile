@@ -11,10 +11,9 @@ VIVADOCOMOPS = -mode batch
 all : setup
 
 # This setups up the top level project
-setup : .setup.done
-.setup.done :
+setup :
 	vivado $(VIVADOCOMOPS) -source $(ROOTDIR)/project_tcl.tcl -log project_tcl.log -jou project_tcl.jou
 
 # delete everything except this Makefile and any .tcl scripts
 clean :
-	find . $(DONTCLEAN)  #| xargs rm -rf
+	find . $(DONTCLEAN) | xargs rm -rf
